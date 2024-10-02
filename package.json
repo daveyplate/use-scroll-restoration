@@ -1,7 +1,7 @@
 {
   "name": "@daveyplate/use-scroll-restoration",
   "homepage": "https://github.com/Daveyplate/use-scroll-restoration",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "NextJS Scroll Restoration Hook",
   "module": "src/index",
   "types": "src/@types/index",
