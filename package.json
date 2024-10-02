@@ -3,7 +3,7 @@
   "homepage": "https://github.com/Daveyplate/use-scroll-restoration",
   "version": "1.0.3",
   "description": "NextJS Scroll Restoration Hook",
-  "main": "src/index",
+  "module": "src/index",
   "types": "src/@types/index",
   "files": [
     "src"
