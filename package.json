@@ -5,6 +5,7 @@
   "description": "NextJS Scroll Restoration Hook",
   "type": "module",
   "main": "src/index",
+  "module": "src/index",
   "types": "src/@types/index",
   "files": [
     "src"
