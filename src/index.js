@@ -1,1 +1,1 @@
-export * from './test-module'
+export * from './use-scroll-restoration'
