@@ -6,7 +6,7 @@ import { useRouter, NextRouter } from 'next/router'
  * @param {string} key - The key to save the scroll position under.
  * @param {string} [selector] - The CSS selector of the element to save the scroll position for. If not provided, the window scroll position is saved.
  */
-export const saveScrollPos = (key, selector) => {
+export function saveScrollPos(key, selector) {
     let scrollPos = { x: window.scrollX, y: window.scrollY }
 
     if (selector) {
@@ -22,7 +22,7 @@ export const saveScrollPos = (key, selector) => {
  * @param {string} key - The key to retrieve the scroll position from.
  * @param {string} [selector] - The CSS selector of the element to restore the scroll position for. If not provided, the window scroll position is restored.
  */
-export const restoreScrollPos = (key, selector) => {
+export function restoreScrollPos(key, selector) {
     const json = sessionStorage.getItem(`scrollPos:${key}`)
     const scrollPos = json ? JSON.parse(json) : { x: 0, y: 0 }
 
@@ -38,7 +38,7 @@ export const restoreScrollPos = (key, selector) => {
  * Delete the saved scroll position from session storage.
  * @param {string} key - The key to delete the scroll position from.
  */
-export const deleteScrollPos = (key) => {
+export function deleteScrollPos(key) {
     sessionStorage.removeItem(`scrollPos:${key}`)
 }
 
