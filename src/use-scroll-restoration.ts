@@ -3,15 +3,16 @@ import { useRouter, NextRouter } from 'next/router'
 
 /**
  * Save the scroll position of the specified element or window to session storage.
- * @param {string} key - The key to save the scroll position under.
- * @param {string} [selector] - The CSS selector of the element to save the scroll position for. If not provided, the window scroll position is saved.
  */
-export function saveScrollPos(key, selector) {
+export function saveScrollPos(key: string, selector?: string) {
     let scrollPos = { x: window.scrollX, y: window.scrollY }
 
     if (selector) {
         const element = document.querySelector(selector)
-        scrollPos = { x: element.scrollLeft, y: element.scrollTop }
+
+        if (element) {
+            scrollPos = { x: element.scrollLeft, y: element.scrollTop }
+        }
     }
 
     sessionStorage.setItem(`scrollPos:${key}`, JSON.stringify(scrollPos))
@@ -19,16 +20,17 @@ export function saveScrollPos(key, selector) {
 
 /**
  * Restore the scroll position of the specified element or window from session storage.
- * @param {string} key - The key to retrieve the scroll position from.
- * @param {string} [selector] - The CSS selector of the element to restore the scroll position for. If not provided, the window scroll position is restored.
  */
-export function restoreScrollPos(key, selector) {
+export function restoreScrollPos(key: string, selector?: string) {
     const json = sessionStorage.getItem(`scrollPos:${key}`)
     const scrollPos = json ? JSON.parse(json) : { x: 0, y: 0 }
 
     if (selector) {
         const element = document.querySelector(selector)
-        element.scrollTo(scrollPos.x, scrollPos.y)
+
+        if (element) {
+            element.scrollTo(scrollPos.x, scrollPos.y)
+        }
     } else {
         window.scrollTo(scrollPos.x, scrollPos.y)
     }
@@ -36,27 +38,33 @@ export function restoreScrollPos(key, selector) {
 
 /**
  * Delete the saved scroll position from session storage.
- * @param {string} key - The key to delete the scroll position from.
  */
-export function deleteScrollPos(key) {
+export function deleteScrollPos(key: string) {
     sessionStorage.removeItem(`scrollPos:${key}`)
+}
+
+interface ScrollRestorationOptions {
+    router?: NextRouter
+    enabled?: boolean
+    selector?: string
+    delay?: number
 }
 
 /**
  * Custom hook to manage scroll restoration for the Next.js Pages Router.
- * @param {Object} [options] - Options for configuring the scroll restoration.
+ * @param {ScrollRestorationOptions} [options]
  * @param {NextRouter} [options.router] - Custom router object. If not provided, the Next.js router is used.
  * @param {boolean} [options.enabled=true] - Flag to enable or disable the scroll restoration.
  * @param {string} [options.selector] - CSS selector of the element to manage scroll restoration for. If not provided, the window scroll position is managed.
  * @param {number} [options.delay] - Delay in milliseconds before restoring scroll position. If not provided, restoration is immediate.
  */
-export function useScrollRestoration({ router = null, enabled = true, selector = null, delay = null } = {}) {
+export function useScrollRestoration({ router, enabled = true, selector, delay }: ScrollRestorationOptions) {
     const nextRouter = useRouter()
     if (!router) {
         router = nextRouter
     }
 
-    const [key, setKey] = useState(null)
+    const [key, setKey] = useState("")
 
     useEffect(() => setKey(window.history.state.key), [])
 
@@ -80,11 +88,11 @@ export function useScrollRestoration({ router = null, enabled = true, selector =
 
             if (delay != null) {
                 setTimeout(() => {
-                    restoreScrollPos(window.history.state.key, selector, delay)
+                    restoreScrollPos(window.history.state.key, selector)
                     deleteScrollPos(window.history.state.key)
                 }, delay)
             } else {
-                restoreScrollPos(window.history.state.key, selector, delay)
+                restoreScrollPos(window.history.state.key, selector)
                 deleteScrollPos(window.history.state.key)
             }
         }
